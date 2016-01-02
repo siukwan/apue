@@ -22,6 +22,8 @@ int main(int argc,char *argv[])
 	{
 		if(write(STDOUT_FILENO,buf,strlen(buf))!=strlen(buf))
 			err_sys("write error");
+		//需要清楚数据，否则会带有上次的数据
+		memset(buf,0,BUFFSIZE);
 	}
 
 	if(n<0)
