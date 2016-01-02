@@ -5,12 +5,17 @@
 //需要使用waitpid
 #include<sys/wait.h>
 
+//信号处理函数
+static void sig_int(int);
 
 int main(void)
 {
 	char  buf[MAXLINE];//MAXLINE在func.h中定义
 	pid_t pid;
 	int   status;
+
+	if(signal(SIGINT,sig_int) == SIG_ERR)
+		err_sys("signal error");
 
 	printf("%% ");
 
@@ -38,4 +43,9 @@ int main(void)
 	}
 
 	exit(0);
+}
+
+void sig_int(int signo)
+{
+	printf("interrupt\n%% ");
 }
