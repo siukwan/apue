@@ -12,10 +12,11 @@
 #include<errno.h>
 #include<syslog.h>
 
+#define MAXLINE 4096
 //2016-01-02 第一章用到的函数
 extern void err_doit(int errnoflag, int level ,const char *fmt, va_list ap);
 extern void err_sys(const char *fmt,...);
 extern void err_quit(const char *fmt,...);
-
+extern void err_ret(const char *fmt,...);
 
 #endif

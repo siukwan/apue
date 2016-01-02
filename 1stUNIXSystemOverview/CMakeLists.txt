@@ -19,6 +19,9 @@ SET(STDIN_TO_STDOUT2_SRC_LIST stdin2stdoutP8.cpp)
 #设置打印进程id编译文件
 SET(PRINT_PROCESS_ID_SRC_LIST printProcessIDP9.cpp)
 
+#设置标准输入执行程序编译文件
+SET(STDIN_2_EXEC_SRC_LIST stdin2execP9.cpp)
+
 #连接库
 ADD_LIBRARY(FuncErr STATIC ${LIB_FUNC_ERR_SRC} )
 
@@ -38,5 +41,9 @@ TARGET_LINK_LIBRARIES(stdin2stdout2 FuncErr)
 #输出可执行文件
 ADD_EXECUTABLE(printProcessID ${PRINT_PROCESS_ID_SRC_LIST})
 TARGET_LINK_LIBRARIES(printProcessID FuncErr)
+
+#输出可执行文件
+ADD_EXECUTABLE(stdin2exec ${STDIN_2_EXEC_SRC_LIST})
+TARGET_LINK_LIBRARIES(stdin2exec FuncErr)
 
  
