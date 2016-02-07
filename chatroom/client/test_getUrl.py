@@ -1,3 +1,4 @@
+#-*-coding=UTF-8-*-
 import httplib
 
 REMOTE_SERVER_HOST = 'www.siukwan.sinaapp.com'
@@ -22,12 +23,20 @@ class HTTPClient:
 			errcode,errmsg,headers = http.getreply()
 		except Exception,e:
 			print "Client failed error code:%s message:%s headers:%s" %(errcode,errmsg,headers)
-		else:
-			print "Got homepage from %s"%self.host
+		#else:
+		#	print "Got homepage from %s"%self.host
 		file = http.getfile()
 		return file.read()
 
+	@staticmethod       #标明为静态方法
+	def getIPandPort(): #获取ip和port
+		client = HTTPClient(REMOTE_SERVER_HOST)
+		IPandPortStr = client.fetch(REMOTE_SERVER_PATH)
+		splitPos = IPandPortStr.index(':')
+		IPStr    = IPandPortStr[:splitPos]
+		PortStr  = IPandPortStr[splitPos:]
+		return IPStr,PortStr
 if __name__ == "__main__":
-	client =HTTPClient(REMOTE_SERVER_HOST)
-	print client.fetch(REMOTE_SERVER_PATH)
-
+	serverIP,serverPort = HTTPClient.getIPandPort()	
+	print "IP为："+serverIP
+	print "Port为："+serverPort 
