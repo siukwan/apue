@@ -7,7 +7,7 @@ import cPickle
 import struct
 import argparse
 
-SERVER_HOST = 'localhost'
+SERVER_HOST = ''
 CHAT_SERVER_NAME = 'server'
 
 #通用的工具函数
