@@ -57,7 +57,7 @@ class HTTPClient:
 		IPandPortStr = client.fetch(REMOTE_SERVER_PATH)
 		splitPos = IPandPortStr.index(':')
 		IPStr    = IPandPortStr[:splitPos]
-		PortStr  = IPandPortStr[splitPos:]
+		PortStr  = IPandPortStr[splitPos+1:]
 		return IPStr,PortStr
 
 class ChatClient(object):
@@ -84,7 +84,7 @@ class ChatClient(object):
 			addr = data.split('CLIENT: ')[1]
 			self.prompt = '['+'@'.join((self.name,addr))+']> '
 		except socket.error, e:
-			print "Failed to connect to chat server @ port %d" % self.port
+			print "Failed to connect to chat server(%s) @ port %d" %( self.host,self.port)
 			sys.exit(1)
 	
 	def run(self):
@@ -115,5 +115,5 @@ class ChatClient(object):
 
 if __name__ == "__main__":
 	serverIP,serverPort = HTTPClient.getIPandPort()
-	client = ChatClient(name="siukwan",port=serverPort,host=serverIP)
+	client = ChatClient(name="siukwan",port=int(serverPort),host="192.168.0.104")
 	client.run()	
