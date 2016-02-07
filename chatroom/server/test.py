@@ -82,11 +82,16 @@ class ChatServer(object):
 					#Read the login name
 					receiveData = receive(client)
 					print "receive data:"+receiveData
-					cname = receiveData.split('NAME: ')[1]
+					if receiveData =='':
+						cname = 'unknown'
+					else:
+						cname = receiveData.split('NAME: ')[1]
 	
 					#Compute client name and send back
 					self.clients +=1
-					send(client, 'CLIENT: ' + str(address[0]))
+					sendData = 'CLIENT: '+str(address[0])
+					send(client, sendData)
+					print '发送数据为：'+sendData
 					inputs.append(client)
 					self.clientmap[client] = (address,cname)
 					#Send joining information to other clients
