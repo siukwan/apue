@@ -115,5 +115,5 @@ class ChatClient(object):
 
 if __name__ == "__main__":
 	serverIP,serverPort = HTTPClient.getIPandPort()
-	client = ChatClient(name="siukwan",port=int(serverPort),host="192.168.0.104")
+	client = ChatClient(name="siukwan",port=int(serverPort),host=serverIP)
 	client.run()	

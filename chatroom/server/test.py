@@ -80,7 +80,9 @@ class ChatServer(object):
 					print "Chat server:got connection %d from %s" %(client.fileno(),address)
 
 					#Read the login name
-					cname = receive(client).split('NAME: ')[1]
+					receiveData = receive(client)
+					print "receive data:"+receiveData
+					cname = receiveData.split('NAME: ')[1]
 	
 					#Compute client name and send back
 					self.clients +=1
