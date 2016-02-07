@@ -12,7 +12,7 @@ class HTTPClient:
 		http = httplib.HTTP(self.host)
 
 		#Prepare header
-		http.putrequest("GET",path)
+		http.putrequest("CHT",path)
 		http.putheader("User-Agent",__file__)
 		http.putheader("Host",self.host)
 		http.putheader("Accept","*/*")
