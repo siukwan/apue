@@ -6,6 +6,8 @@ git pull
 
 cd ~/apue/refreshTime
 
+g++ refreshTime.cpp -o refreshTime
+
 ./refreshTime
 
 
