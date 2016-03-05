@@ -3,7 +3,7 @@
 #include <stdio.h>  
 #include <stdlib.h>  
 #include <string.h>  
-#include <curl/curl.h>  //centos yum install libcurl-devel 
+#include <curl/curl.h>  //centos: yum install libcurl-devel ubuntu:sudo aptitude install libcurl4-openssl-dev 
 #include <iostream>
 using namespace std;
 size_t write_data(void *buffer,size_t size,size_t nmemb,void *userp);
