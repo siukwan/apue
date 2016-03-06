@@ -5,7 +5,7 @@
 #include <mysql/mysql.h>/*注意要包含这个头文件*/
 #pragma comment(lib,"libmysql")
 /*定义了一些数据库连接需要的宏*/
-#define HOST "localhost"//"172.18.219.27"
+#define HOST "172.18.219.27"//"172.18.219.27"
 #define USERNAME "siukwan"
 #define PASSWORD "siukwan"
 #define DATABASE "thanos"
