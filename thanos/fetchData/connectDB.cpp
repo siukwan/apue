@@ -3,39 +3,114 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <mysql/mysql.h>/*注意要包含这个头文件*/
+#pragma comment(lib,"libmysql")
+/*定义了一些数据库连接需要的宏*/
+#define HOST "localhost"//"172.18.219.27"
+#define USERNAME "siukwan"
+#define PASSWORD "siukwan"
+#define DATABASE "thanos"
+/*这个函数用来执行传入的sql語句*/
+void exe_sql(char* sql) {
+	MYSQL my_connection; /*这是一个数据库连接*/
+	int res; /*执行sql語句后的返回标志*/
+		/*初始化mysql连接my_connection*/
+	mysql_init(&my_connection);
+	/*这里就是用了mysql.h里的一个函数，用我们之前定义的那些宏建立mysql连接，并
+	返回一个值，返回不为空证明连接是成功的*/
+	if (mysql_real_connect(&my_connection, HOST, USERNAME, PASSWORD,DATABASE, 0, NULL, CLIENT_FOUND_ROWS))
+	{/*连接成功*/
+		printf("数据库执行exe_sql连接成功！n");
+		/*这句话是设置查询编码为utf8，这样支持中文*/
+		mysql_query(&my_connection, "set names utf8");
+		/*下面这句话就是用mysql_query函数来执行我们刚刚传入的sql語句，
+		这会返回一个int值，如果为0，证明語句执行成功*/
+		res = mysql_query(&my_connection, sql);
 
-
-int main()
-
+		if (res)
+		{/*现在就代表执行失败了*/
+			printf("Error： mysql_query !\n");
+			/*不要忘了关闭连接*/
+			mysql_close(&my_connection);
+		}
+		else
+		{/*现在就代表执行成功了*/
+			/*mysql_affected_rows会返回执行sql后影响的行数*/
+			printf("%d 行受到影响！\n",
+			mysql_affected_rows(&my_connection));
+			/*不要忘了关闭连接*/
+			mysql_close(&my_connection);
+		}
+	}
+	else
+	{
+		/*数据库连接失败*/
+		printf("数据库执行exe_sql连接失败！\n");
+	}
+}
+/*这个函数用来执行传入的sql語句，并打印出查询結果*/
+void query_sql(char* sql)
 {
-
-  const char *host = "localhost";
-
-  const char *user = "siukwan";
-
-  const char *pass = "siukwan";
-
-  const char *db   = "thanos";
-
-  MYSQL mysql;
-
-  mysql_init(&mysql);
-
-
-  if (!mysql_real_connect(&mysql, host, user, pass, db, 0, NULL, 0)) {
-
-    printf("%s", mysql_error(&mysql));
-
-  }
-
-  else {
-
-    printf("YES, Conected succeed!");
-
-  }
-
-  mysql_close(&mysql);
-
-  return 0;
-
+	MYSQL my_connection; /*这是一个数据库连接*/
+	int res; /*执行sql語句后的返回标志*/
+	MYSQL_RES *res_ptr; /*指向查询结果的指针*/
+	MYSQL_FIELD *field; /*字段结构指针*/
+	MYSQL_ROW result_row; /*按行返回的查询信息*/
+	int row, column; /*查询返回的行数和列数*/
+	int i, j; /*只是控制循环的两个变量*/
+	/*初始化mysql连接my_connection*/
+	mysql_init(&my_connection);
+	/*这里就是用了mysql.h里的一个函数，用我们之前定义的那些宏建立mysql连接，并
+	返回一个值，返回不为空证明连接是成功的*/
+	if (mysql_real_connect(&my_connection, HOST, USERNAME, PASSWORD,DATABASE, 0, NULL, CLIENT_FOUND_ROWS))
+	{/*连接成功*/
+		printf("数据库查询query_sql连接成功！\n");
+		/*这句话是设置查询编码为utf8，这样支持中文*/
+		mysql_query(&my_connection, "set names utf8");
+		/*下面这句话就是用mysql_query函数来执行我们刚刚传入的sql語句，
+		这会返回一个int值，如果为0，证明語句执行成功*/
+		res = mysql_query(&my_connection, sql);
+		if (res)
+		{ /*现在就代表执行失败了*/
+			printf("Error： mysql_query !\n");
+			/*不要忘了关闭连接*/
+			mysql_close(&my_connection);
+		}
+		else
+		{ /*现在就代表执行成功了*/
+			/*将查询的結果给res_ptr*/
+			res_ptr = mysql_store_result(&my_connection);
+			/*如果结果不为空，就把结果print*/
+			if (res_ptr)
+			{
+				/*取得結果的行数和*/
+				column = mysql_num_fields(res_ptr);
+				row = mysql_num_rows(res_ptr) + 1;
+				printf("查询到 %lu 行 \n", row);
+				/*输出結果的字段名*/
+				for (i = 0; field = mysql_fetch_field(res_ptr); i++)
+					printf("%st", field->name);
+				printf("\n");
+				/*按行输出結果*/
+				for (i = 1; i < row; i++)
+				{
+					result_row = mysql_fetch_row(res_ptr);
+					for (j = 0; j < column; j++)
+						printf("%st", result_row[j]);
+					printf("\n");
+				}
+			}
+			/*不要忘了关闭连接*/
+			mysql_close(&my_connection);
+		}
+	}
+}
+int main(int argc, char *argv[]) {
+	/*测试下向里面插入数据*/
+	char *query;
+	char *exe = "insert into student values('lala','hahhahah!');";
+	exe_sql(exe);
+	/*测试下查询*/
+	query="select * from student;";
+	query_sql(query);
+	return 0;
 }
