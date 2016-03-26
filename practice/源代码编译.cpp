@@ -1,84 +1,58 @@
-﻿#include <iostream>
-#include <queue>
-#include <unordered_map>
-#include <unordered_set>
-#include <string>
-using namespace std;
+﻿/*
+题目描述
 
-int main()
-{
-	int Test;
-	//cin>>Test;
-	scanf("%d", &Test);
-	for (int tCase = 0; tCase<Test; ++tCase)
-	{
-		//unordered_map<int,string> mapping;
-		unordered_map<string, int> nameMapping;
-		int N;
-		//cin>>N;
-		scanf("%d", &N);
-		vector<int> inDegree(N, 0);
-		vector<string> mapping(N);
-		//vector<unordered_set<int>> graph(N);
-		vector<vector<int>>graph(N);
-		for (int n = 0; n<N; ++n)
-		{
+对于一个有向图，请实现一个算法，找出两点之间是否存在一条路径。
+给定图中的两个结点的指针UndirectedGraphNode* a,UndirectedGraphNode* b(请不要在意数据类型，图是有向图),请返回一个bool，代表两点之间是否存在一条路径(a到b或b到a)。
 
-			//cin>>name;
-			char buff[15];
-			scanf("%s", buff);
-			string name = buff;
-			mapping[n] = name;
-			nameMapping[name] = n;
-			//cin>>inDegree[n];
-			scanf("%d", &inDegree[n]);
-			for (int i = 0; i<inDegree[n]; ++i)
-			{
-				int tempLabel;
-				//cin>>tempLabel;
-				scanf("%d", &tempLabel);
-				graph[tempLabel].push_back(n);
-			}
-		}
-		vector<string> ans;
-		priority_queue<string, vector<string>, greater<string>> q;
-		for (int n = 0; n<N; ++n)
-		{
-			if (inDegree[n] == 0)
-			{
-				q.push(mapping[n]);
-			}
-		}
+*/
+
+
+/*
+struct UndirectedGraphNode {
+int label;
+vector<struct UndirectedGraphNode *> neighbors;
+UndirectedGraphNode(int x) : label(x) {}
+};*/
+
+class Path {
+public:
+	bool checkPath(UndirectedGraphNode* a, UndirectedGraphNode* b) {
+		// write code here
+		return checkPath1(a, b) || checkPath1(b, a);
+	}
+
+	bool checkPath1(UndirectedGraphNode* a, UndirectedGraphNode* b) {
+		if (a->label == b->label) return true;
+		map<UndirectedGraphNode*, bool> visited;
+		queue<UndirectedGraphNode*> q;
+		q.push(a);
+		int count1 = 1;
+		int count2 = 0;
+
 		while (!q.empty())
 		{
-			string tempNodeName = q.top();
-			q.pop();
-			ans.push_back(tempNodeName);
-			for (vector<int>::iterator it = graph[nameMapping[tempNodeName]].begin();
-				it != graph[nameMapping[tempNodeName]].end(); ++it)
+			for (int i = 0; i<count1; ++i)
 			{
-				--inDegree[(*it)];
-				if (inDegree[(*it)] == 0)
+				UndirectedGraphNode* tmp = q.front();
+				q.pop();
+				if (tmp->label == b->label) return true;
+
+				for (int j = 0; j<tmp->neighbors.size(); ++j)
 				{
-					q.push(mapping[(*it)]);
+					if (tmp->neighbors[j]->label == b->label) return true;
+					if (!visited[tmp->neighbors[j]])//注意存在回环，需要标记已经遍历过的节点
+					{
+						visited[tmp->neighbors[j]] = true;
+						q.push(tmp->neighbors[j]);
+						count2++;
+					}
 				}
 			}
+			count1 = count2;
+			count2 = 0;
 		}
-		if (ans.size() == N)
-		{
-			for (int i = 0; i<ans.size(); ++i)
-			{
-				//cout<<ans[i]<<endl;
-				printf("%s\n", ans[i].c_str());
-			}
-		}
-		else
-		{
-			//cout<<"ERROR"<<endl;
-			printf("ERROR\n");
-		}
-		//cout<<endl;
-		printf("\n");
+
+		return false;
+
 	}
-	return 0;
-}
+};
