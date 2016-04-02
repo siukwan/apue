@@ -14,6 +14,7 @@ def send(channel,*args):
 	size = struct.pack("L",value)
 	channel.send(size)
 	channel.send(buffer)
+	print buffer
 
 def receive(channel):
 	size = struct.calcsize("L")

@@ -20,7 +20,9 @@ def send(channel , *args):
 
 def receive(channel):
 	size = struct.calcsize("L")
+	print 'size大小为：'+str(size)
 	size = channel.recv(size)
+	print 'size内容为：'+size
 	try:
 		size = socket.ntohl(struct.unpack("L",size)[0])
 	except struct.error,e:
